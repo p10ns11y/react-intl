@@ -131,6 +131,27 @@ describe('<FormattedMessage>', () => {
         );
     });
 
+    it('accepts `values` with reusable keys', () => {
+        const {intl} = intlProvider.getChildContext();
+        const descriptor = {
+            id: 'multi.use.tool',
+            defaultMessage: 'I saw a {tool} {adj} a {tool} I never saw!',
+        };
+        const values = {tool: 'saw', adj: 'such'};
+
+        const el = <FormattedMessage {...descriptor} values={values} />;
+
+        renderer.render(el, {intl});
+        const rendered = renderer.getRenderOutput();
+
+        expect(rendered).toEqualJSX(
+            <span>{intl.formatMessage(descriptor, values)}</span>
+        );
+        expect(rendered).toEqualJSX(
+            <span>I saw a saw such a saw I never saw!</span>
+        );
+    });
+
     it('should re-render when `values` are different', () => {
         const {intl} = intlProvider.getChildContext();
         const descriptor = {
